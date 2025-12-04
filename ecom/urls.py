@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from service import views as v1
+from customer import views as v2
+from vendor import views as v3
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -29,6 +31,10 @@ urlpatterns = [
     path('register/', v1.register, name='register'),
     path('contact/', v1.contact, name='contact'),
     path('aboutus/', v1.aboutus, name='aboutus'),
+
+    path('cutomer/customer_dashboard/', v2.cust_dashboard, name='cust_dashboard'),
+
+    path('vendor/vendor_dashboard/', v3.ven_dashboard, name='ven_dashboard'),
 ]
 
 

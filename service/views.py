@@ -10,25 +10,31 @@ def login(request):
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
-
-        obj = Users.objects.get(email = email)
-        if obj:
-            if obj.passkey != password:
-                messages.error("Please check the password and try again")
-                return render(request, "login.html")
-            elif obj.passkey == password:
-                if obj.utype == "Vendor":
-                    
-                if obj.utype == "Customer":
-
-        else:
-            messages.error("Please check the email and try again")
+        try:
+            obj = Users.objects.get(email = email)
+            if obj:
+                if obj.passkey != password:
+                    messages.error(request, "Please check the password and try again")
+                    return render(request, "login.html")
+                elif obj.passkey == password:
+                    print("hi\n"*23)
+                    if obj.utype == "Vendor":
+                        request.session['uid'] = obj.uid
+                        request.session['user_type'] = "Vendor"
+                        return redirect('ven_dashboard')
+                    if obj.utype == "Customer":
+                        request.session['uid'] = obj.uid
+                        request.session['user_type'] = "Customer"
+                        return redirect('cust_dashboard')
+        except Exception as e:
+            messages.error(request, "please check the email")
+            messages.error(request, "please try again email not found")
             return render(request, "login.html")
+    print("hi\n"*23)
     return render(request, "login.html")
 
 def register(request):
     if request.method == "POST":
-        
         utype = request.POST.get('type')
         uname = request.POST.get('uname')
         email = request.POST.get('email')
@@ -37,15 +43,12 @@ def register(request):
         loca = request.POST.get('loca')
         addr = request.POST.get('addr')
         photo = request.FILES.get('photo')
-
         if utype == "Vendor":
             com_name = request.POST.get('cname')
             com_addr = request.POST.get('com_addr')
-
         elif utype == "Customer":
             com_name = "N/A"
             com_addr = "N/A"
-
         try:
             Users.objects.create(
                 utype = utype,
@@ -58,19 +61,14 @@ def register(request):
                 location = loca,
                 addr = addr
             )
-
             obj = Users.objects.get(email = email)
             obj.photo = photo
             obj.save()
-
             messages.success(request, "User Registration Sucessful")
             return redirect('login')
-        
         except Exception as e:
-            
             messages.error(request, "User Registration Un-Sucessful")
             return redirect('register')
-        
     return render(request, 'register.html')
 
 def contact(request):
