@@ -18,7 +18,9 @@ def login(request):
                 return render(request, "login.html")
             elif obj.passkey == password:
                 if obj.utype == "Vendor":
-                if obj.utype == "Customer"
+                    
+                if obj.utype == "Customer":
+
         else:
             messages.error("Please check the email and try again")
             return render(request, "login.html")
